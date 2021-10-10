@@ -1,0 +1,57 @@
+.sb-button {
+    display: block;
+    border: none;
+    background-color: black;
+    color: white;
+    padding: 10px 20px;
+    margin: .5rem 0;
+    width: 200px;
+    text-align: center;
+    cursor: pointer;
+  }
+  
+  .map-picker-container{
+    display: none;
+    margin: 1rem 0;
+    background-color: whitesmoke;
+    padding: 1rem 2rem;
+  }
+  
+  .map-picker {
+    height: 300px;
+    width: 450px;
+  }
+  
+  .sb-notify{
+    display: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    color: crimson;
+    margin: 2rem 0;
+  }
+  .sb-notify.show{
+    display: block;
+  }
+  
+  .sb-notify.error{
+    background-color: rgb(233, 208, 213);
+  }
+  
+  /*form*/
+  .sbsl-input-group{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    margin: 1rem 0;
+    width: auto;
+  }
+  .sbsl-input-label{
+    margin-bottom: 5px;
+  }
+  .sbsl-input{
+    height: 20px;
+    border: 1px solid black;
+    padding: 5px 10px;
+    width: 90%;
+  }
