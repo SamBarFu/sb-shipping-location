@@ -6,31 +6,55 @@
 
   jQuery(document).ready(() => {
 
-    console.log(apiKey)
-
-    jQuery(document).on("click", "#sbsl-show-map-picker-button", () => {
+    /* 
+    ** open select map picker and Initialize map_init
+    */
+    jQuery(document).on("click", "#sbsl-show-map-picker-button", (evt) => {
       jQuery('#map-picker-container').show();
-      sbsl_map_init();
+      evt.target.style.display = 'none'
+      let mapCanvas = document.querySelector('#sbsl_location_picker_map canvas');
+      if(!mapCanvas){
+        sbsl_map_init()
+      }
     });
-  });
 
-  jQuery(document).on("click", "#sbsl-select-location-button", (e) => {    
-    let errOutCover = jQuery(".sb-notify.out-of-cover");
-    errOutCover.html('');
-    errOutCover.hide();
+    /*
+    ** update adress fields on checkout form
+    */
+    jQuery(document).on("click", "#sbsl-select-location-button", (e) => {    
+      resetErrMsg();  
+      let fieldAddress = jQuery('#sbsl_location_new_address');
 
-    if (address.country.short_name != "CRI") {
-      errOutCover.html(
-        "La ubicación seleccionada se sale del área de cobertura, por favor intenta con otra ubicación"
-      );
-      errOutCover.show();
-    } else {
+      if(!fieldAddress.val()){
+        showErrMsg('!Por favor seleccione una dirección del mapa¡');
+        fieldAddress.css('border', '1px solid crimson');
+        fieldAddress.click(()=>{
+          fieldAddress.css('border', '1px solid black');
+        })
+        return;
+      }
+
+      if (address.country.short_name != "CRI") {
+        showErrMsg('La ubicación seleccionada se sale del área de cobertura, por favor intenta con otra ubicación');
+        return;
+      }
+
       sbsl_update_address_fields(address);
-    }
-  });
+    });
 
-  function sbsl_update_address_fields(address) {
+    /*
+    ** close select map picker
+    */
+    jQuery(document).on("click", "#sbsl-close-select-location-button", () => {
+      closeMapPicker();
+    })
+
+  });  
+
+  function sbsl_update_address_fields(add) {
     let inputs = document.querySelectorAll(".woocommerce-billing-fields input");
+    let inputsChaged = [];
+
     const fields = [
       "address_1",
       "address_2",
@@ -39,16 +63,56 @@
       "district",
       "postcode",
     ];
-    for (const input of inputs) {
+
+    inputs.forEach( (input, index) => {
       if (input.id.includes("billing")) {
         for (const field of fields) {
-          if (input.id.includes(field) && address[field]) {
-            input.value = address[field].short_name;
+          if (input.id.includes(field) && add[field]) {
+            input.value = '';
+            input.value = add[field].short_name;
+            inputsChaged.push(input);
           }
         }
       }
-    }
+    });
+
+    scrollTopInputChanged(inputsChaged);
+
   }
+
+  //scroll to inputs changed and draw background input
+  function scrollTopInputChanged(inputs){
+
+    inputs.forEach((input)=>{
+      input.style.backgroundColor = '#f0fff0';
+      input.addEventListener('click', ()=>{
+        input.style.backgroundColor = 'white'
+      });
+    })
+
+    closeMapPicker();
+
+    jQuery('html, body').animate({
+      scrollTop: jQuery('#'+inputs[0].id).offset().top - 100
+    }, 500);
+  }
+
+  function closeMapPicker(){
+    jQuery('#map-picker-container').hide();
+    jQuery('#sbsl-show-map-picker-button').show();
+  }
+
+  function showErrMsg(msg){
+    let alert = jQuery(".sb-notify.out-of-cover");
+    alert.html(`${msg}`); 
+    alert.show();
+  }
+  function resetErrMsg(){
+    let alert = jQuery(".sb-notify.out-of-cover");
+    alert.html(''); 
+    alert.hide();
+  }
+  
 
   function sbsl_map_init(params) {
     let mapId = document.getElementById("sbsl_location_picker_map");
@@ -95,6 +159,12 @@
             console.log(err.message);
           };
       }
+    }else{
+      reverseGeocode(
+        position.latitude,
+        position.longitude,
+        platform
+      );
     }
   }
 
@@ -121,8 +191,6 @@
     let position = location.position;
 
     let address_items = {};
-
-    console.log(location);
 
     address_items.formatted_address = location.address.label;
 
@@ -249,7 +317,6 @@
   }
 
   function getAddress2() {
-    //let newArea = document.getElementById('sbsl_location_new_area');
     let newFlatNo = document.getElementById('sbsl_location_new_flat_no');
     return newFlatNo.value;    
   }

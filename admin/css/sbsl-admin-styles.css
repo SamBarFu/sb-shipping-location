@@ -1,0 +1,51 @@
+.main-content.admin {
+  background-color: white;
+  width: calc(100% - 20px - 8rem);
+  height: calc(100% - 4rem);
+  border-radius: 8px;
+  padding: 2rem 4rem;
+  margin-top: 2.5rem;
+}
+
+.form-api-key {
+    margin-top: 4rem;
+}
+
+/*form*/
+.sbsl-input-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin: 1rem 0;
+  width: auto;
+}
+.sbsl-input-label {
+  font-size: 18px;
+  color: black;
+  margin-bottom: 10px;
+}
+input[type="text"].sbsl-input{
+  height: 30px;
+  border: 1px solid black;
+  padding: 5px 10px;
+  width: 90%;
+  border-radius: 0;
+}
+.sb-button{
+    border: none;
+    border-radius: 0;
+    height: 30px;   
+    font-size: 16px;
+    padding: 5px 10px; 
+    cursor: pointer;
+}
+
+.sb-button.button-black{
+    background-color: black;
+    color: white;
+}
+.sb-button.button-black:hover{
+    background-color: rgb(68, 68, 68);
+}
+
